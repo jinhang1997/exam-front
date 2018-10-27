@@ -3,23 +3,46 @@
 <head>
   <meta charset="utf-8">
   <title>等待</title>
-  <script src="js/vue.min.js"></script>
+  <script src="files/jquery-3.3.1.min.js"></script>
+  <script src="files/vue.min.js"></script>
+  <script src="files/vue-resource.min.js"></script>
 </head>
 <body>
-  <div id="app">
+<div id="app">
   <h1>在线考试系统</h1>
+  <p>当前登录状态：{{ loginuser }}</p>
   <h2>请选择要进入的考试</h2>
   <p></p>
 </div>
 
 <script>
-new Vue({
-  el: '#app',
-  data: {
-    user: 'testuser',
-    passwd: 'testpasswd',
-  }
-})
+window.onload = function(){
+  var vm = new Vue({
+    el:'#app',
+    data:{
+      loginuser : ''
+    },
+    methods:{
+      
+    },
+    created:function(){
+      this.$http.get('http://localhost:8000/login/').then(function(res){
+        console.log(res.bodyText);
+        var dataret = JSON.parse(res.bodyText);
+        if (dataret.code == 200)
+        {
+          this.loginuser = dataret.username;
+        }
+        else
+        {
+          this.loginuser = dataret.info;
+        }
+      },function(res){
+        console.log(res.status);
+      });
+    }
+  })
+}
 </script>
 </body>
 </html>

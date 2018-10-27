@@ -30,7 +30,6 @@
 </div>
 
 <script>
-  //Vue.http.options.xhr = { withCredentials: true }
 window.onload = function(){
   var vm = new Vue({
   //new Vue({
@@ -47,9 +46,16 @@ window.onload = function(){
         this.$http.post('http://localhost:8000/login/', this.postdata, {emulateJSON: true}).then(function(res){
           //document.write(res.bodyText);  
           console.log(res.bodyText);
-          var datagot = JSON.parse(res.bodyText);
-          console.log(datagot.redirect);
-          window.location.href = datagot.redirect;
+          var dataret = JSON.parse(res.bodyText);
+          if (dataret.code == 200)
+          {
+            console.log(dataret.redirect);
+            window.location.href = dataret.redirect;
+          }
+          else
+          {
+            alert('登录错误！');
+          }
           //console.log(res);
           //console.log(JSON.parse(res.bodyText));
           //window.location.href='http://www.ddhbb.com';
