@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>在线考试系统 - 管理员</title>
+  <script src="files/jquery-3.3.1.min.js"></script>
+  <script src="files/vue.min.js"></script>
+  <script src="files/vue-resource.min.js"></script>
+  <script src="files/common.js"></script>
+  <link rel="stylesheet" type="text/css" href="files/style.css" />
+</head>
+<body>
+
+<div id="verify">
+  <h1>在线考试系统</h1>
+  <p>当前用户：{{ loginuser }}<br><a @click="logout()" href="#">注销登录</a></p>
+</div>
+
+<div id="usermanage">
+  <!-- <h2>添加用户</h2>
+  <table>
+    <tr>
+      <td>账号：</td>
+      <td><input name="account" v-model="postdata.username" placeholder="在此输入账号..."></td>
+    </tr>
+    <tr>
+      <td>密码：</td>
+      <td><input name="password" v-model="postdata.password" placeholder="在此输入密码..."></td>
+    </tr>
+    <tr>
+      <td>用户类型：</td>
+      <td>
+        <select v-model="postdata.usertype" name="usertype">
+          <option value="">选择一个类别</option>
+          <option value="student">学生用户</option>
+          <option value="teacher">教师用户</option>
+        </select>
+      </td>
+    </tr>
+  </table> -->
+
+  <h2>用户管理</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>用户名</th>
+        <th>密码</th>
+        <th>用户类型</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for ="(user,index) in userlist">
+        <td>{{ user.username }}</td>
+        <td>{{ user.password }}</td>
+        <td>{{ user.usertype }}</td>
+        <td><input type="button" v-on:click="remove(user.username)" value="删除" /></td>
+      </tr>
+      <tr>
+        <td><input type="text" id="name" v-model="postdata.username" placeholder="待添加账户的账号..." /></td>
+        <td><input type="text" id="age"v-model="postdata.password" placeholder="待添加账户的密码..."/></td>
+        <td>
+          <select v-model="postdata.usertype" name="usertype">
+            <option value="">选择一个类别</option>
+            <option value="student">学生用户</option>
+            <option value="teacher">教师用户</option>
+          </select>
+        </td>
+        <td><input type="button" @click="insert" value="添加" /></td>
+      </tr>
+    </tbody>
+   </table>
+
+  <input type="button" @click="tryadd()" value="添加用户">
+</div>
+
+<script type="text/javascript">
+var vm = new Vue({
+  el:'#usermanage',
+  data:{
+    user: {
+      username: '', password: '', usertype: ''
+    },
+    userlist: [
+      {username: 'user1', password: 'u1', usertype: 'student'},
+      {username: 'user2', password: 'u2', usertype: 'teacher'},
+    ],
+    postdata: {
+      username: '',
+      password: '',
+      usertype: ''
+    }
+  },
+  methods:{
+    insert:function(){
+      console.log(this.postdata);
+      if (this.postdata.username == '' || this.postdata.password == '' || this.postdata.usertype == '')
+      {
+        alert('用户信息不能有缺省');
+        return;
+      }
+      this.$http.post('http://localhost:8000/user-add/', this.postdata, {emulateJSON: true, credentials: true}).then(function(res){
+        console.log(res.bodyText);
+        var dataret = JSON.parse(res.bodyText);
+        if (dataret.code == 200)
+        {
+          alert('添加用户成功');
+          location.reload();
+        }
+        else
+        {
+          alert('添加用户失败(1)');
+        }
+      },function(res){
+        console.log(res.status);
+        alert('添加用户失败(2)');
+      });
+    },
+    remove:function(username){
+      console.log(username + ' is to be deleted.');
+      this.$http.post('http://localhost:8000/user-delete/', {"username": username}, {emulateJSON: true, credentials: true}).then(function(res){
+        console.log(res.bodyText);
+        var dataret = JSON.parse(res.bodyText);
+        if (dataret.code == 200)
+        {
+          alert('删除用户成功');
+          location.reload();
+        }
+        else
+        {
+          alert('删除用户失败(1)');
+        }
+      },function(res){
+        console.log(res.status);
+        alert('删除(2)');
+      });
+    },
+    get_userlist:function(){
+      this.$http.get('http://localhost:8000/user-list/', {credentials: true}).then(function(res){
+        console.log(res.bodyText);
+        var dataret = JSON.parse(res.bodyText);
+        if (dataret.code == 200)
+        {
+          this.userlist = dataret.userlist
+        }
+        else
+        {
+          alert('获取用户列表失败(1)');
+        }
+      },function(res){
+        console.log(res.status);
+        alert('获取用户列表失败(2)');
+      });
+    }
+  },
+  created:function(){
+    this.get_userlist();
+  }
+})
+</script>
+
+</body>
+</html>

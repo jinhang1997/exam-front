@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<title>在线考试系统</title>
-<script src="files/jquery-3.3.1.min.js"></script>
-<script src="files/vue.min.js"></script>
-<script src="files/vue-resource.min.js"></script>
+  <meta charset="utf-8">
+  <title>在线考试系统</title>
+  <script src="files/jquery-3.3.1.min.js"></script>
+  <script src="files/vue.min.js"></script>
+  <script src="files/vue-resource.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="files/style.css" />
 </head>
 <body>
 <div id="app">
@@ -21,7 +22,7 @@
       <td><input name="password" v-model="postdata.password" placeholder="在此输入密码..."></td>
     </tr>
     <tr>
-      <td>
+      <td colspan="2">
         <input type="button" @click="trylogin()" value="登录">
       </td>
     </tr>
