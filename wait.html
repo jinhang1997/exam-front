@@ -6,43 +6,48 @@
   <script src="files/jquery-3.3.1.min.js"></script>
   <script src="files/vue.min.js"></script>
   <script src="files/vue-resource.min.js"></script>
+  <script src="files/common.js"></script>
 </head>
 <body>
-<div id="app">
+<div id="verify">
   <h1>在线考试系统</h1>
-  <p>当前登录状态：{{ loginuser }}</p>
-  <h2>请选择要进入的考试</h2>
-  <p></p>
+  <p>当前登录状态：{{ loginuser }}<br><a @click="logout()" href="#">注销登录</a></p>
 </div>
 
-<script>
-window.onload = function(){
-  var vm = new Vue({
-    el:'#app',
-    data:{
-      loginuser : ''
-    },
-    methods:{
-      
-    },
-    created:function(){
-      this.$http.get('http://localhost:8000/login/').then(function(res){
-        console.log(res.bodyText);
-        var dataret = JSON.parse(res.bodyText);
-        if (dataret.code == 200)
-        {
-          this.loginuser = dataret.username;
-        }
-        else
-        {
-          this.loginuser = dataret.info;
-        }
-      },function(res){
-        console.log(res.status);
-      });
-    }
-  })
-}
+<div id="testlist">
+  <h2>请选择要进入的考试</h2>
+  <p>{{ testlist }}</p>
+</div>
+
+
+<script type="text/javascript">
+var vm = new Vue({
+  el:'#testlist',
+  data:{
+    testlist : ''
+  },
+  methods:{
+    
+  },
+  created:function(){
+    this.$http.get('http://localhost:8000/testlist/').then(function(res){
+      //this.testlist = '123';
+      console.log(res.bodyText);
+      var dataret = JSON.parse(res.bodyText);
+      if (dataret.code == 200)
+      {
+        this.testlist = dataret.list
+      }
+      else
+      {
+        this.testlist = '获取试题列表失败 1'
+      }
+    },function(res){
+      console.log(res.status);
+      this.testlist = '获取试题列表失败 2';
+    });
+  }
+})
 </script>
 </body>
 </html>

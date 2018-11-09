@@ -15,7 +15,6 @@
     <tr>
       <td>账号：</td>
       <td><input name="account" v-model="postdata.account" placeholder="在此输入账号..."></td>
-      <td>{{ postdata.account }}</td>
     </tr>
     <tr>
       <td>密码：</td>
@@ -43,7 +42,7 @@ window.onload = function(){
     methods:{
       trylogin:function(){
         //发送 post 请求
-        this.$http.post('http://localhost:8000/login/', this.postdata, {emulateJSON: true}).then(function(res){
+        this.$http.post('http://localhost:8000/login/', this.postdata, {emulateJSON: true, credentials: true}).then(function(res){
           //document.write(res.bodyText);  
           console.log(res.bodyText);
           var dataret = JSON.parse(res.bodyText);
