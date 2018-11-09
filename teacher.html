@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>在线考试系统 - 教师用户</title>
+  <script src="files/jquery-3.3.1.min.js"></script>
+  <script src="files/vue.min.js"></script>
+  <script src="files/vue-resource.min.js"></script>
+  <script src="files/common.js"></script>
+</head>
+<body>
+<div id="verify">
+  <h1>在线考试系统</h1>
+  <p>当前用户：{{ loginuser }}<br><a @click="logout()" href="#">注销登录</a></p>
+</div>
+
+<div id="app">
+  <h2>试题管理</h2>
+  <h3>创建试题</h3>
+  <h3>试题列表</h3>
+  <p>{{ testlist }}</p>
+</div>
+
+<script type="text/javascript">
+var vm = new Vue({
+  el:'#app',
+  data:{
+    testlist : '',
+  },
+  methods:{
+    get_test_list:function(){
+      this.$http.get('http://localhost:8000/test-list-tea/', {credentials: true}).then(function(res){
+        console.log(res.bodyText);
+        var dataret = JSON.parse(res.bodyText);
+        if (dataret.code == 200)
+        {
+          this.testlist = dataret.list
+        }
+        else
+        {
+          this.testlist = '获取试题列表失败(1)'
+        }
+      },function(res){
+        console.log(res.status);
+        this.testlist = '获取试题列表失败(2)';
+      });
+    }
+  },
+  created:function(){
+    this.get_test_list();
+  }
+})
+</script>
+
+</body>
+</html>

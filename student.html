@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>在线考试系统 - 学生用户</title>
+  <script src="files/jquery-3.3.1.min.js"></script>
+  <script src="files/vue.min.js"></script>
+  <script src="files/vue-resource.min.js"></script>
+  <script src="files/common.js"></script>
+</head>
+<body>
+<div id="verify">
+  <h1>在线考试系统</h1>
+  <p>当前用户：{{ loginuser }}<br><a @click="logout()" href="#">注销登录</a></p>
+</div>
+
+<div id="testlist">
+  <h2>我的信息</h2>
+  <p>{{ myinfo }}</p>
+  <h2>可参加的考试</h2>
+  <p>{{ testlist }}</p>
+  <h2>参加过的考试</h2>
+  <p>{{ testhistory }}</p>
+</div>
+
+
+<script type="text/javascript">
+var vm = new Vue({
+  el:'#testlist',
+  data:{
+    myinfo: '',
+    testlist : '',
+    testhistory: ''
+  },
+  methods:{
+    get_my_info:function(){
+      this.$http.get('http://localhost:8000/my-info/').then(function(res){
+        console.log(res.bodyText);
+        var dataret = JSON.parse(res.bodyText);
+        if (dataret.code == 200)
+        {
+          this.myinfo = dataret.info
+        }
+        else
+        {
+          this.myinfo = '获取个人信息失败(1)'
+        }
+      },function(res){
+        console.log(res.status);
+        this.myinfo = '获取个人信息失败(2)';
+      });
+    },
+    get_test_list:function(){
+      this.$http.get('http://localhost:8000/test-list-ava/', {credentials: true}).then(function(res){
+        console.log(res.bodyText);
+        var dataret = JSON.parse(res.bodyText);
+        if (dataret.code == 200)
+        {
+          this.testlist = dataret.list
+        }
+        else
+        {
+          this.testlist = '获取试题列表失败(1)'
+        }
+      },function(res){
+        console.log(res.status);
+        this.testlist = '获取试题列表失败(2)';
+      });
+    },
+    get_test_history:function(){
+      this.$http.get('http://localhost:8000/test-history/', {credentials: true}).then(function(res){
+        console.log(res.bodyText);
+        var dataret = JSON.parse(res.bodyText);
+        if (dataret.code == 200)
+        {
+          this.testhistory = dataret.list
+        }
+        else
+        {
+          this.testhistory = '获取考试历史记录失败(1)'
+        }
+      },function(res){
+        console.log(res.status);
+        this.testhistory = '获取考试历史记录失败(2)';
+      });
+    }
+  },
+  created:function(){
+    this.get_my_info();
+    this.get_test_list();
+    this.get_test_history();
+  }
+})
+</script>
+</body>
+</html>
