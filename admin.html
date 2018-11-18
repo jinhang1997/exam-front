@@ -17,29 +17,13 @@
 </div>
 
 <div id="usermanage">
-  <!-- <h2>添加用户</h2>
-  <table>
-    <tr>
-      <td>账号：</td>
-      <td><input name="account" v-model="postdata.username" placeholder="在此输入账号..."></td>
-    </tr>
-    <tr>
-      <td>密码：</td>
-      <td><input name="password" v-model="postdata.password" placeholder="在此输入密码..."></td>
-    </tr>
-    <tr>
-      <td>用户类型：</td>
-      <td>
-        <select v-model="postdata.usertype" name="usertype">
-          <option value="">选择一个类别</option>
-          <option value="student">学生用户</option>
-          <option value="teacher">教师用户</option>
-        </select>
-      </td>
-    </tr>
-  </table> -->
-
-  <h2>用户管理</h2>
+  <h2>批量导入用户</h2>
+  <p>请在下面输入用户名、密码和角色，一行一个用户，用户名、密码和角色之间以一个空格分隔</p>
+  <p>角色名称：<code>student</code>（学生用户）或<code>teacher</code>（教师用户）</p>
+  <textarea rows="5" cols="50" id="batch_names" v-model="postdata.batch_names" placeholder="user password role"></textarea><br>
+  <input type="button" @click="batch_insert" value="批量添加" />  
+  <hr>
+  <h2>用户列表</h2>
   <table class="table">
     <thead>
       <tr>
@@ -70,8 +54,6 @@
       </tr>
     </tbody>
    </table>
-
-  <input type="button" @click="tryadd()" value="添加用户">
 </div>
 
 <script type="text/javascript">
@@ -88,8 +70,9 @@ var vm = new Vue({
     postdata: {
       username: '',
       password: '',
-      usertype: ''
-    }
+      usertype: '',
+      batch_names: ''
+    },
   },
   methods:{
     insert:function(){
@@ -109,11 +92,11 @@ var vm = new Vue({
         }
         else
         {
-          alert('添加用户失败(1)');
+          alert('添加用户失败(' + dataret.info +')');
         }
       },function(res){
         console.log(res.status);
-        alert('添加用户失败(2)');
+        alert('添加用户失败(unknown error)');
       });
     },
     remove:function(username){
@@ -128,11 +111,11 @@ var vm = new Vue({
         }
         else
         {
-          alert('删除用户失败(1)');
+          alert('删除用户失败(' + dataret.info +')');
         }
       },function(res){
         console.log(res.status);
-        alert('删除(2)');
+        alert('删除用户失败(未知错误)');
       });
     },
     get_userlist:function(){
@@ -145,13 +128,31 @@ var vm = new Vue({
         }
         else
         {
-          alert('获取用户列表失败(1)');
+          alert('获取用户列表失败(' + dataret.info +')');
         }
       },function(res){
         console.log(res.status);
-        alert('获取用户列表失败(2)');
+        alert('获取用户列表失败(未知错误)');
       });
-    }
+    },
+    batch_insert:function(){
+      this.$http.post('http://localhost:8000/user-add-batch/', this.postdata, {emulateJSON: true, credentials: true}).then(function(res){
+        console.log(res.bodyText);
+        var dataret = JSON.parse(res.bodyText);
+        if (dataret.code == 200)
+        {
+          alert('成功添加了' + dataret.info + '个用户');
+          location.reload();
+        }
+        else
+        {
+          alert('添加用户失败(' + dataret.info +')');
+        }
+      },function(res){
+        console.log(res.status);
+        alert('添加用户失败(unknown error)');
+      });
+    },
   },
   created:function(){
     this.get_userlist();
