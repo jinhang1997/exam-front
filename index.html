@@ -36,15 +36,15 @@ window.onload = function(){
     el:'#app',
     data:{
       postdata:{
-        account: 'testuser',
-        password: 'testpasswd',
+        account: 'tea1',
+        password: 'tea1',
       }
     },
     methods:{
       trylogin:function(){
         //发送 post 请求
         this.$http.post('http://localhost:8000/login/', this.postdata, {emulateJSON: true, credentials: true}).then(function(res){
-          //document.write(res.bodyText);  
+          //document.write(res.bodyText);
           console.log(res.bodyText);
           var dataret = JSON.parse(res.bodyText);
           if (dataret.code == 200)
