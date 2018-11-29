@@ -53,6 +53,12 @@
   </table>
   <hr>
   <h2>准考学生列表</h2>
+  </thead>
+  <table class="table">
+    <tbody id="stutable"></tbody>
+  </table>
+  <h3>批量导入学生</h3>
+  
   <hr>
   <h2>题目列表</h2>
   <table class="table">
@@ -122,6 +128,18 @@ var vm = new Vue({
       wrong1: '',
       wrong2: '',
       wrong3: ''
+    },
+    stulist: {
+      count: 7,
+      stulist: [
+        {"stu": "16001"},
+        {"stu": "16002"},
+        {"stu": "16003"},
+        {"stu": "16004"},
+        {"stu": "16005"},
+        {"stu": "16006"},
+        {"stu": "16007"}
+      ],
     },
     procount: 0,
     prolist : '',
@@ -209,11 +227,25 @@ var vm = new Vue({
         console.log(res.status);
         this.prolist = '获取试题列表失败(2)';
       });
+    },
+    generate_stutable:function(){
+      var tabledata = "<tr>";
+      for (var i=0; i<this.stulist.count; i++)
+      {
+        tabledata += "<td>" + this.stulist.stulist[i].stu + "</td>";
+        if ((i + 1) % 8 == 0)
+        {
+          tabledata += "</tr><tr>";
+        }
+      }
+      tabledata += "</tr>";
+      $("#stutable").html(tabledata);
     }
   },
   created:function(){
     this.paperid = getQueryString('paperid');
     this.get_paper_detail();
+    this.generate_stutable();
   }
 })
 </script>
