@@ -16,21 +16,203 @@
 </div>
 
 <div id="app">
-  <p>{{ paperid }}</p>
+  <!-- <p>{{ prolist }}</p> -->
+  <h2>试卷信息</h2>
+  <!-- <p>{{ paper }}</p> -->
+  <table>
+    <thead>
+      <th>项目</th>
+      <th>数据</th>
+    </thead>
+    <tbody>
+      <tr>
+        <td>试卷编号</td>
+        <td>{{ paper.pid }}</td>
+      </tr>
+      <tr>
+        <td>试卷名称</td>
+        <td>{{ paper.pname }}</td>
+      </tr>
+      <tr>
+        <td>出题老师</td>
+        <td>{{ paper.teaname }}</td>
+      </tr>
+      <tr>
+        <td>是否开放</td>
+        <td>{{ paper.penabled }}</td>
+      </tr>
+      <tr>
+        <td>题目数量</td>
+        <td>{{ procount }}</td>
+      </tr>
+      <tr>
+        <td>考生人数</td>
+        <td>{{ 0 }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <hr>
+  <h2>准考学生列表</h2>
+  <hr>
+  <h2>题目列表</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>编号</th>
+        <th>题干</th>
+        <th>类型</th>
+        <th>分值</th>
+        <th>参考答案</th>
+        <th>干扰项1</th>
+        <th>干扰项2</th>
+        <th>干扰项3</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for ="(pro, index) in prolist">
+        <td>{{ pro.id }}</td>
+        <td>{{ pro.problem }}</td>
+        <td v-if="pro.type == 'keguan'">客观题</td>
+        <td v-if="pro.type == 'zhuguan'">主观题</td>
+        <td>{{ pro.point }}</td>
+        <td>{{ pro.right }}</td>
+        <td>{{ pro.wrong1 }}</td>
+        <td>{{ pro.wrong2 }}</td>
+        <td>{{ pro.wrong3 }}</td>
+        <td><input type="button" v-on:click="remove(paper.pid)" value="删除" />
+          <!-- <input type="button" v-on:click="modify(paper.pid)" value="修改" /> --></td>
+      </tr>
+      <tr>
+        <td>(#)</td>
+        <td><input type="text" id="problem" v-model="newpro.problem" placeholder="输入题干"/></td>
+        <td>
+          <select v-model="newpro.ptype" name="type">
+            <option value="">选择一个类别</option>
+            <option value="keguan">客观题</option>
+            <option value="zhuguan">主观题</option>
+          </select>
+        </td>
+        <td><input type="text" id="problem" v-model="newpro.point" style="width: 20px" /></td>
+        <td><input type="text" id="problem" v-model="newpro.right" style="width: 50px" /></td>
+        <td><input type="text" id="problem" v-model="newpro.wrong1" style="width: 50px" /></td>
+        <td><input type="text" id="problem" v-model="newpro.wrong2" style="width: 50px" /></td>
+        <td><input type="text" id="problem" v-model="newpro.wrong3" style="width: 50px" /></td>
+        <td><input type="button" @click="insert" value="添加" /></td>
+      </tr>
+    </tbody>
+   </table>
 </div>
 
 <script type="text/javascript">
 var vm = new Vue({
   el:'#app',
   data:{
-    prolist : [],
-    paperid: 123
+    paper: {
+      pid: 0,
+      pname: '',
+      teaname: '',
+      penabled: ''
+    },
+    newpro:{
+      problem: '',
+      ptype: '',
+      point: '',
+      right: '',
+      wrong1: '',
+      wrong2: '',
+      wrong3: ''
+    },
+    procount: 0,
+    prolist : '',
+    paperid: 0
   },
   methods:{
-    
+    remove:function(pid){
+      postdata = {
+        action: 'delpro',
+        proid: pid
+      };
+      this.$http.post(backend_server + 'paper-modify/', postdata, {credentials: true})
+      .then(function(res){
+        console.log(res.bodyText);
+        var dataret = JSON.parse(res.bodyText);
+        if (dataret.code == 200)
+        {
+          //console.log(this.prolist);
+          //location.reload();
+        }
+        else
+        {
+          //this.prolist = '获取试题列表失败(1)';
+          alert('删除题目失败（1）');
+          location.reload();
+        }
+      },function(res){
+        console.log(res.status);
+        //this.prolist = '获取试题列表失败(2)';
+        alert('删除题目失败（2）');
+        location.reload();
+      });
+    },
+    modify:function(){
+
+    },
+    insert:function(){
+      postdata = {
+        action: 'addpro',
+        paperid: this.paper.pid,
+        problem: this.newpro
+      };
+      console.log(postdata);
+      this.$http.post(backend_server + 'paper-modify/', postdata, {credentials: true})
+      .then(function(res){
+        console.log(res.bodyText);
+        var dataret = JSON.parse(res.bodyText);
+        if (dataret.code == 200)
+        {
+          //console.log(this.prolist);
+          alert('新增题目成功');
+          location.reload();
+        }
+        else
+        {
+          //this.prolist = '获取试题列表失败(1)';
+          alert('新增题目失败（1）');
+          location.reload();
+        }
+      },function(res){
+        console.log(res.status);
+        //this.prolist = '获取试题列表失败(2)';
+        alert('新增题目失败（2）');
+        location.reload();
+      });
+    },
+    get_paper_detail:function(){
+      this.$http.get(backend_server + 'paper-get-detail/?id=' + this.paperid, {credentials: true})
+      .then(function(res){
+        console.log(res.bodyText);
+        var dataret = JSON.parse(res.bodyText);
+        if (dataret.code == 200)
+        {
+          this.paper = dataret.info;
+          this.procount = dataret.paper.problem_count;
+          this.prolist = dataret.paper.question_list;
+          console.log(this.prolist);
+        }
+        else
+        {
+          this.prolist = '获取试题列表失败(1)';
+        }
+      },function(res){
+        console.log(res.status);
+        this.prolist = '获取试题列表失败(2)';
+      });
+    }
   },
   created:function(){
     this.paperid = getQueryString('paperid');
+    this.get_paper_detail();
   }
 })
 </script>
