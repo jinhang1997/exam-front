@@ -80,7 +80,7 @@
         <td>{{ pro.wrong1 }}</td>
         <td>{{ pro.wrong2 }}</td>
         <td>{{ pro.wrong3 }}</td>
-        <td><input type="button" v-on:click="remove(paper.pid)" value="删除" />
+        <td><input type="button" v-on:click="remove(pro.id)" value="删除" />
           <!-- <input type="button" v-on:click="modify(paper.pid)" value="修改" /> --></td>
       </tr>
       <tr>
@@ -128,10 +128,12 @@ var vm = new Vue({
     paperid: 0
   },
   methods:{
-    remove:function(pid){
+    remove:function(id_to_del){
+      console.warn(id_to_del + " is to be removed.");
       postdata = {
         action: 'delpro',
-        proid: pid
+        paperid: this.paper.pid,
+        problem: id_to_del
       };
       this.$http.post(backend_server + 'paper-modify/', postdata, {credentials: true})
       .then(function(res){
@@ -140,23 +142,22 @@ var vm = new Vue({
         if (dataret.code == 200)
         {
           //console.log(this.prolist);
-          //location.reload();
+          alert('删除题目成功');
+          location.reload();
         }
         else
         {
-          //this.prolist = '获取试题列表失败(1)';
           alert('删除题目失败（1）');
-          location.reload();
+          //location.reload();
         }
       },function(res){
         console.log(res.status);
-        //this.prolist = '获取试题列表失败(2)';
         alert('删除题目失败（2）');
-        location.reload();
+        //location.reload();
       });
     },
     modify:function(){
-
+      // NOT confirmed to implement this one
     },
     insert:function(){
       postdata = {
