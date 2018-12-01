@@ -35,8 +35,59 @@ var vm = new Vue({
     paperid: 0
   },
   methods:{
+    remove_name:function(stuname){
+      postdata = {
+        paperid: this.paper.pid,
+        stu_to_del: "" + stuname,
+        action: 'delstu'
+      };
+      this.$http.post(backend_server + 'paper-stulist/', postdata, {credentials: true})
+      .then(function(res){
+        console.log(res.bodyText);
+        var dataret = JSON.parse(res.bodyText);
+        if (dataret.code == 200)
+        {
+          //console.log(this.prolist);
+          alert('删除学生成功');
+          location.reload();
+        }
+        else
+        {
+          alert('删除学生失败（1）');
+          //location.reload();
+        }
+      },function(res){
+        console.log(res.status);
+        alert('删除学生失败（2）');
+        //location.reload();
+      });
+    },
     delete_all_names:function(){
-      // TODO: delete all names from student list
+      // delete all names from student list
+      postdata = {
+        paperid: this.paper.pid,
+        action: 'cleanstu'
+      };
+      this.$http.post(backend_server + 'paper-stulist/', postdata, {credentials: true})
+      .then(function(res){
+        console.log(res.bodyText);
+        var dataret = JSON.parse(res.bodyText);
+        if (dataret.code == 200)
+        {
+          //console.log(this.prolist);
+          alert('清空学生名单成功');
+          location.reload();
+        }
+        else
+        {
+          alert('清空学生名单失败（1）');
+          //location.reload();
+        }
+      },function(res){
+        console.log(res.status);
+        alert('清空学生名单失败（2）');
+        //location.reload();
+      });
     },
     batch_insert:function(){
       postdata = {
@@ -153,7 +204,12 @@ var vm = new Vue({
       var tabledata = "<tr>";
       for (var i=0; i<this.stulist.count; i++)
       {
-        tabledata += "<td>" + this.stulist.stu_list[i].stu + "</td>";
+        tabledata += "<td>";
+        tabledata += "<input type=\"button\" onclick=\"vm.remove_name(" +
+         this.stulist.stu_list[i].stu + ")\" value=\"" +
+         this.stulist.stu_list[i].stu + "\" />"
+        //tabledata += this.stulist.stu_list[i].stu;
+        tabledata += "</td>";
         if ((i + 1) % 8 == 0)
         {
           tabledata += "</tr><tr>";
