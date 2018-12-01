@@ -10,6 +10,7 @@
   <link rel="stylesheet" type="text/css" href="files/style.css" />
 </head>
 <body>
+
 <div id="verify">
   <h1>在线考试系统</h1>
   <p>当前用户：{{ loginuser }}<br><a @click="logout()" href="#">注销登录</a></p>
@@ -47,18 +48,24 @@
       </tr>
       <tr>
         <td>考生人数</td>
-        <td>{{ 0 }}</td>
+        <td>{{ stulist.count }}</td>
       </tr>
     </tbody>
   </table>
   <hr>
   <h2>准考学生列表</h2>
+  <h3>点击可删除单个学生</h3>
   </thead>
   <table class="table">
     <tbody id="stutable"></tbody>
   </table>
+  <input type="button" @click="delete_all_names" value="清空准考学生列表" />  
   <h3>批量导入学生</h3>
-  
+  <form>
+    <textarea rows="5" cols="50" id="batch_names" v-model="batch_names" placeholder="一行一个学生..."></textarea><br>
+    <input type="button" @click="batch_insert" value="添加" />
+    <input type="reset" value="重置" />
+  </form>
   <hr>
   <h2>题目列表</h2>
   <table class="table">
@@ -110,144 +117,6 @@
    </table>
 </div>
 
-<script type="text/javascript">
-var vm = new Vue({
-  el:'#app',
-  data:{
-    paper: {
-      pid: 0,
-      pname: '',
-      teaname: '',
-      penabled: ''
-    },
-    newpro:{
-      problem: '',
-      ptype: '',
-      point: '',
-      right: '',
-      wrong1: '',
-      wrong2: '',
-      wrong3: ''
-    },
-    stulist: {
-      count: 7,
-      stulist: [
-        {"stu": "16001"},
-        {"stu": "16002"},
-        {"stu": "16003"},
-        {"stu": "16004"},
-        {"stu": "16005"},
-        {"stu": "16006"},
-        {"stu": "16007"}
-      ],
-    },
-    procount: 0,
-    prolist : '',
-    paperid: 0
-  },
-  methods:{
-    remove:function(id_to_del){
-      console.warn(id_to_del + " is to be removed.");
-      postdata = {
-        action: 'delpro',
-        paperid: this.paper.pid,
-        problem: id_to_del
-      };
-      this.$http.post(backend_server + 'paper-modify/', postdata, {credentials: true})
-      .then(function(res){
-        console.log(res.bodyText);
-        var dataret = JSON.parse(res.bodyText);
-        if (dataret.code == 200)
-        {
-          //console.log(this.prolist);
-          alert('删除题目成功');
-          location.reload();
-        }
-        else
-        {
-          alert('删除题目失败（1）');
-          //location.reload();
-        }
-      },function(res){
-        console.log(res.status);
-        alert('删除题目失败（2）');
-        //location.reload();
-      });
-    },
-    modify:function(){
-      // NOT confirmed to implement this one
-    },
-    insert:function(){
-      postdata = {
-        action: 'addpro',
-        paperid: this.paper.pid,
-        problem: this.newpro
-      };
-      console.log(postdata);
-      this.$http.post(backend_server + 'paper-modify/', postdata, {credentials: true})
-      .then(function(res){
-        console.log(res.bodyText);
-        var dataret = JSON.parse(res.bodyText);
-        if (dataret.code == 200)
-        {
-          //console.log(this.prolist);
-          alert('新增题目成功');
-          location.reload();
-        }
-        else
-        {
-          //this.prolist = '获取试题列表失败(1)';
-          alert('新增题目失败（1）');
-          location.reload();
-        }
-      },function(res){
-        console.log(res.status);
-        //this.prolist = '获取试题列表失败(2)';
-        alert('新增题目失败（2）');
-        location.reload();
-      });
-    },
-    get_paper_detail:function(){
-      this.$http.get(backend_server + 'paper-get-detail/?id=' + this.paperid, {credentials: true})
-      .then(function(res){
-        console.log(res.bodyText);
-        var dataret = JSON.parse(res.bodyText);
-        if (dataret.code == 200)
-        {
-          this.paper = dataret.info;
-          this.procount = dataret.paper.problem_count;
-          this.prolist = dataret.paper.question_list;
-          console.log(this.prolist);
-        }
-        else
-        {
-          this.prolist = '获取试题列表失败(1)';
-        }
-      },function(res){
-        console.log(res.status);
-        this.prolist = '获取试题列表失败(2)';
-      });
-    },
-    generate_stutable:function(){
-      var tabledata = "<tr>";
-      for (var i=0; i<this.stulist.count; i++)
-      {
-        tabledata += "<td>" + this.stulist.stulist[i].stu + "</td>";
-        if ((i + 1) % 8 == 0)
-        {
-          tabledata += "</tr><tr>";
-        }
-      }
-      tabledata += "</tr>";
-      $("#stutable").html(tabledata);
-    }
-  },
-  created:function(){
-    this.paperid = getQueryString('paperid');
-    this.get_paper_detail();
-    this.generate_stutable();
-  }
-})
-</script>
+<script src="files/detail.js"></script>
 </body>
 </html>
