@@ -23,7 +23,6 @@ var vm = new Vue({
         var dataret = JSON.parse(res.bodyText);
         if (dataret.code == 200)
         {
-          //console.log(this.prolist);
           alert('创建试题成功，试卷名：' + dataret.papername );
           location.reload();
         }
@@ -37,10 +36,32 @@ var vm = new Vue({
         alert('创建试题失败（2）');
         //location.reload();
       });
-      //
     },
     remove:function(paperid){
       // TODO: remove paper from paper list
+      postdata = {
+        paperid: paperid,
+        action: 'delete'
+      };
+      this.$http.post(backend_server + 'paper-manage/', postdata, {credentials: true})
+      .then(function(res){
+        console.log(res.bodyText);
+        var dataret = JSON.parse(res.bodyText);
+        if (dataret.code == 200)
+        {
+          alert('删除试题成功，试卷编号：' + dataret.paperid );
+          location.reload();
+        }
+        else
+        {
+          alert('删除试题失败（1）');
+          //location.reload();
+        }
+      },function(res){
+        console.log(res.status);
+        alert('删除试题失败（2）');
+        //location.reload();
+      });
       //
     },
     detail:function(paperid){
