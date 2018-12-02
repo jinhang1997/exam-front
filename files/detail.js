@@ -30,7 +30,6 @@ var vm = new Vue({
       ],
     },
     batch_names: '',
-    procount: 0,
     prolist : '',
     paperid: 0
   },
@@ -123,7 +122,7 @@ var vm = new Vue({
         paperid: this.paper.pid,
         problem: id_to_del
       };
-      this.$http.post(backend_server + 'paper-modify/', postdata, {credentials: true})
+      this.$http.post(backend_server + 'paper-prolist/', postdata, {credentials: true})
       .then(function(res){
         //console.log(res.bodyText);
         var dataret = JSON.parse(res.bodyText);
@@ -154,7 +153,7 @@ var vm = new Vue({
         problem: this.newpro
       };
       console.log(postdata);
-      this.$http.post(backend_server + 'paper-modify/', postdata, {credentials: true})
+      this.$http.post(backend_server + 'paper-prolist/', postdata, {credentials: true})
       .then(function(res){
         console.log(res.bodyText);
         var dataret = JSON.parse(res.bodyText);
@@ -185,10 +184,11 @@ var vm = new Vue({
         if (dataret.code == 200)
         {
           this.paper = dataret.info;
-          this.procount = dataret.paper.problem_count;
-          this.prolist = dataret.paper.question_list;
+          /*this.procount = dataret.paper.problem_count;
+          this.prolist = dataret.paper.question_list;*/
+          this.prolist = dataret.paper;
           this.stulist = dataret.stulist;
-          console.log(this.prolist);
+          //console.log(this.prolist);
           this.generate_stutable();
         }
         else

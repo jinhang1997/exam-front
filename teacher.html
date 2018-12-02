@@ -39,7 +39,8 @@
       <tr v-for ="(paper,index) in paperlist">
         <td>{{ paper.pid }}</td>
         <td>{{ paper.pname }}</td>
-        <td>{{ paper.penabled }}</td>
+        <td v-if="paper.penabled == 'no'">否</td>
+        <td v-if="paper.penabled == 'yes'">是</td>
         <td>{{ paper.teaname }}</td>
         <td>{{ paper.prolist }}</td>
         <td>{{ paper.stulist }}</td>

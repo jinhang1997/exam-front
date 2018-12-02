@@ -40,11 +40,12 @@
       </tr>
       <tr>
         <td>是否开放</td>
-        <td>{{ paper.penabled }}</td>
+        <td v-if="paper.penabled == 'no'">否</td>
+        <td v-if="paper.penabled == 'yes'">是</td>
       </tr>
       <tr>
         <td>题目数量</td>
-        <td>{{ procount }}</td>
+        <td>{{ prolist.problem_count }}</td>
       </tr>
       <tr>
         <td>考生人数</td>
@@ -83,7 +84,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for ="(pro, index) in prolist">
+      <tr v-for ="(pro, index) in prolist.question_list">
         <td>{{ pro.id }}</td>
         <td>{{ pro.problem }}</td>
         <td v-if="pro.type == 'keguan'">客观题</td>
