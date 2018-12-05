@@ -10,29 +10,114 @@
   <link rel="stylesheet" type="text/css" href="files/style.css" />
 </head>
 <body>
+
 <div id="verify">
   <h1>在线考试系统</h1>
   <p>当前用户：{{ loginuser }}<br><a @click="logout()" href="#">注销登录</a></p>
 </div>
 
 <div id="app">
-  <p>{{ paperid }}</p>
+  <!-- <p>{{ prolist }}</p> -->
+  <h2>试卷信息</h2>
+  <!-- <p>{{ paper }}</p> -->
+  <table>
+    <thead>
+      <th>项目</th>
+      <th>数据</th>
+    </thead>
+    <tbody>
+      <tr>
+        <td>试卷编号</td>
+        <td>{{ paper.pid }}</td>
+      </tr>
+      <tr>
+        <td>试卷名称</td>
+        <td>{{ paper.pname }}</td>
+      </tr>
+      <tr>
+        <td>出题老师</td>
+        <td>{{ paper.teaname }}</td>
+      </tr>
+      <tr>
+        <td>是否开放</td>
+        <td v-if="paper.penabled == 'no'">否</td>
+        <td v-if="paper.penabled == 'yes'">是</td>
+      </tr>
+      <tr>
+        <td>题目数量</td>
+        <td>{{ prolist.problem_count }}</td>
+      </tr>
+      <tr>
+        <td>考生人数</td>
+        <td>{{ stulist.count }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <hr>
+  <h2>准考学生列表</h2>
+  <h3>点击可删除单个学生</h3>
+  </thead>
+  <table class="table">
+    <tbody id="stutable"></tbody>
+  </table>
+  <input type="button" @click="delete_all_names" value="清空准考学生列表" />  
+  <h3>批量导入学生</h3>
+  <form>
+    <textarea rows="5" cols="50" id="batch_names" v-model="batch_names" placeholder="一行一个学生..."></textarea><br>
+    <input type="button" @click="batch_insert" value="添加" />
+    <input type="reset" value="重置" />
+  </form>
+  <hr>
+  <h2>题目列表</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>编号</th>
+        <th>题干</th>
+        <th>类型</th>
+        <th>分值</th>
+        <th>参考答案</th>
+        <th>干扰项1</th>
+        <th>干扰项2</th>
+        <th>干扰项3</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for ="(pro, index) in prolist.question_list">
+        <td>{{ pro.id }}</td>
+        <td>{{ pro.problem }}</td>
+        <td v-if="pro.type == 'keguan'">客观题</td>
+        <td v-if="pro.type == 'zhuguan'">主观题</td>
+        <td>{{ pro.point }}</td>
+        <td>{{ pro.right }}</td>
+        <td>{{ pro.wrong1 }}</td>
+        <td>{{ pro.wrong2 }}</td>
+        <td>{{ pro.wrong3 }}</td>
+        <td><input type="button" v-on:click="remove(pro.id)" value="删除" />
+          <!-- <input type="button" v-on:click="modify(paper.pid)" value="修改" /> --></td>
+      </tr>
+      <tr>
+        <td>(#)</td>
+        <td><input type="text" id="problem" v-model="newpro.problem" placeholder="输入题干"/></td>
+        <td>
+          <select v-model="newpro.ptype" name="type">
+            <option value="">选择一个类别</option>
+            <option value="keguan">客观题</option>
+            <option value="zhuguan">主观题</option>
+          </select>
+        </td>
+        <td><input type="text" id="problem" v-model="newpro.point" style="width: 20px" /></td>
+        <td><input type="text" id="problem" v-model="newpro.right" style="width: 50px" /></td>
+        <td><input type="text" id="problem" v-model="newpro.wrong1" style="width: 50px" /></td>
+        <td><input type="text" id="problem" v-model="newpro.wrong2" style="width: 50px" /></td>
+        <td><input type="text" id="problem" v-model="newpro.wrong3" style="width: 50px" /></td>
+        <td><input type="button" @click="insert" value="添加" /></td>
+      </tr>
+    </tbody>
+   </table>
 </div>
 
-<script type="text/javascript">
-var vm = new Vue({
-  el:'#app',
-  data:{
-    prolist : [],
-    paperid: 123
-  },
-  methods:{
-    
-  },
-  created:function(){
-    this.paperid = getQueryString('paperid');
-  }
-})
-</script>
+<script src="files/detail.js"></script>
 </body>
 </html>

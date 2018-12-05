@@ -16,82 +16,39 @@
 </div>
 
 <div id="testlist">
-  <h2>我的信息</h2>
-  <p>{{ myinfo }}</p>
+  <!-- <h2>我的信息</h2>
+  <p>{{ myinfo }}</p> -->
   <h2>可参加的考试</h2>
   <p>{{ testlist }}</p>
+  <table>
+    <thead>
+      <th>试题编号</th>
+      <th>试题名称</th>
+      <th>是否开放</th>
+      <th>出题老师</th>
+      <th>题目数量</th>
+      <th>准考人数</th>
+      <th>进入考试</th>
+    </thead>
+    <tbody>
+      <tr v-for ="(paper, index) in testlist">
+        <td>{{  }}</td>
+        <td>{{  }}</td>
+        <td v-if="paper.penabled == 'no'">否</td>
+        <td v-if="paper.penabled == 'yes'">是</td>
+        <td>{{  }}</td>
+        <td>{{  }}</td>
+        <td>{{  }}</td>
+        <td v-if="paper.penabled == 'no'"></td>
+        <td v-if="paper.penabled == 'yes'"><input type="button" value="进入"></td>
+      </tr>
+    </tbody>
+  </table>
   <h2>参加过的考试</h2>
   <p>{{ testhistory }}</p>
 </div>
 
+<script src="files/student.js"></script>
 
-<script type="text/javascript">
-var vm = new Vue({
-  el:'#testlist',
-  data:{
-    myinfo: '',
-    testlist : '',
-    testhistory: ''
-  },
-  methods:{
-    get_my_info:function(){
-      this.$http.get('http://localhost:8000/my-info/').then(function(res){
-        console.log(res.bodyText);
-        var dataret = JSON.parse(res.bodyText);
-        if (dataret.code == 200)
-        {
-          this.myinfo = dataret.info
-        }
-        else
-        {
-          this.myinfo = '获取个人信息失败(1)'
-        }
-      },function(res){
-        console.log(res.status);
-        this.myinfo = '获取个人信息失败(2)';
-      });
-    },
-    get_test_list:function(){
-      this.$http.get('http://localhost:8000/test-list-ava/', {credentials: true}).then(function(res){
-        console.log(res.bodyText);
-        var dataret = JSON.parse(res.bodyText);
-        if (dataret.code == 200)
-        {
-          this.testlist = dataret.list
-        }
-        else
-        {
-          this.testlist = '获取试题列表失败(1)'
-        }
-      },function(res){
-        console.log(res.status);
-        this.testlist = '获取试题列表失败(2)';
-      });
-    },
-    get_test_history:function(){
-      this.$http.get('http://localhost:8000/test-history/', {credentials: true}).then(function(res){
-        console.log(res.bodyText);
-        var dataret = JSON.parse(res.bodyText);
-        if (dataret.code == 200)
-        {
-          this.testhistory = dataret.list
-        }
-        else
-        {
-          this.testhistory = '获取考试历史记录失败(1)'
-        }
-      },function(res){
-        console.log(res.status);
-        this.testhistory = '获取考试历史记录失败(2)';
-      });
-    }
-  },
-  created:function(){
-    this.get_my_info();
-    this.get_test_list();
-    this.get_test_history();
-  }
-})
-</script>
 </body>
 </html>

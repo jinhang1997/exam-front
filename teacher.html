@@ -18,9 +18,11 @@
 <div id="app">
   <h2>试题管理</h2>
   <h3>创建试题</h3>
+  <p>新试题的名称：<input type="text" name="newpaper" v-model="newpaper" placeholder="输入试题名称..."></p>
+  <input type="button" value="创建试题" @click="create()" >
   <hr>
   <h3>试题列表</h3>
-  <p>{{ paperlist }}</p>
+  <!-- <p>{{ paperlist }}</p> -->
   <table class="table">
     <thead>
       <tr>
@@ -28,15 +30,20 @@
         <th>试题名称</th>
         <th>是否开放</th>
         <th>出题老师</th>
-        <th>操作</th>
+        <th>题目数量</th>
+        <th>准考人数</th>
+        <th>试卷操作</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for ="(paper,index) in paperlist">
         <td>{{ paper.pid }}</td>
         <td>{{ paper.pname }}</td>
-        <td>{{ paper.penabled }}</td>
+        <td v-if="paper.penabled == 'no'">否</td>
+        <td v-if="paper.penabled == 'yes'">是</td>
         <td>{{ paper.teaname }}</td>
+        <td>{{ paper.prolist }}</td>
+        <td>{{ paper.stulist }}</td>
         <td><input type="button" v-on:click="remove(paper.pid)" value="删除" />
           <input type="button" v-on:click="detail(paper.pid)" value="查看" /></td>
       </tr>
@@ -44,44 +51,7 @@
    </table>
 </div>
 
-<script type="text/javascript">
-var vm = new Vue({
-  el:'#app',
-  data:{
-    paperlist : []
-  },
-  methods:{
-    remove:function(paperid){
-      // remove
-    },
-    detail:function(paperid){
-      // show detail
-      window.open("detail.html?paperid=" + paperid);
-    },
-    get_test_list:function(){
-      this.$http.get('http://localhost:8000/test-list-tea/', {credentials: true}).then(function(res){
-        console.log(res.bodyText);
-        var dataret = JSON.parse(res.bodyText);
-        if (dataret.code == 200)
-        {
-          this.paperlist = dataret.list;
-          console.log(this.paperlist);
-        }
-        else
-        {
-          this.paperlist = '获取试题列表失败(1)';
-        }
-      },function(res){
-        console.log(res.status);
-        this.paperlist = '获取试题列表失败(2)';
-      });
-    }
-  },
-  created:function(){
-    this.get_test_list();
-  }
-})
-</script>
+<script src="files/teacher.js"></script>
 
 </body>
 </html>

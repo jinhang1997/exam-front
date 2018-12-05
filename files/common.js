@@ -49,6 +49,8 @@ window.onload = function(){
   })
 }
 
+var backend_server = 'http://localhost:8000/'
+
 function getQueryString(name) { 
   var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
   var r = window.location.search.substr(1).match(reg); 
