@@ -88,17 +88,15 @@ var vm = new Vue({
                         var qdesc=document.createElement("td");
                         qid.innerHTML=question.id;
                         qdesc.innerHTML=question.problem;
-                //        var tab=document.getElementById("paper_table");
                         var tab=document.createElement("table");
                         tab.appendChild(tr);
                         tr.appendChild(qid);
                         tr.appendChild(qdesc);
 
-                        var input=document.createElement("input");
-                        input.setAttribute("type", "input");
+                        var input=document.createElement("textarea");
+                        input.setAttribute("type", "textarea");
                         input.style.width = "200px";
                         input.style.height = "100px";
-                //        tab.appendChild(input);
                         paper_div.appendChild(tab);
                         paper_div.appendChild(input);
                 }
@@ -109,7 +107,6 @@ var vm = new Vue({
                         var qdesc=document.createElement("td");
                         qid.innerHTML=question.id;
                         qdesc.innerHTML=question.problem;
-                  //      var tab=document.getElementById("paper_table");
                         var tab=document.createElement("table");
                         tab.appendChild(tr);
                         tr.appendChild(qid);
