@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>在线考试系统 - 管理员</title>
+  <script src="files/jquery-3.3.1.min.js"></script>
+  <script src="files/vue.min.js"></script>
+  <script src="files/vue-resource.min.js"></script>
+  <script src="files/common.js"></script>
+  <link rel="stylesheet" type="text/css" href="files/style.css" />
+</head>
+<body>
+
+<div id="verify">
+  <h1>在线考试系统</h1>
+  <p>当前用户：{{ loginuser }}<br><a @click="logout()" href="#">注销登录</a></p>
+</div>
+
+<div id="usermanage">
+  <h2>批量导入用户</h2>
+  <p>请在下面输入用户名、密码和角色，一行一个用户，用户名、密码和角色之间以一个空格分隔</p>
+  <p>角色名称：<code>student</code>（学生用户）或<code>teacher</code>（教师用户）</p>
+  <textarea rows="5" cols="50" id="batch_names" v-model="postdata.batch_names" placeholder="user password role"></textarea><br>
+  <input type="button" @click="batch_insert" value="批量添加" />  
+  <hr>
+  <h2>用户列表</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>用户名</th>
+        <th>密码</th>
+        <th>用户类型</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for ="(user,index) in userlist">
+        <td>{{ user.username }}</td>
+        <td>{{ user.password }}</td>
+        <td v-if="user.usertype == 'student'">学生用户</td>
+        <td v-if="user.usertype == 'teacher'">教师用户</td>
+        <td v-if="user.usertype == 'admin'">管理员</td>
+        <!-- <td>{{ user.usertype }}</td> -->
+        <td><input type="button" v-on:click="remove(user.username)" value="删除" /></td>
+      </tr>
+      <tr>
+        <td><input type="text" id="name" v-model="postdata.username" placeholder="待添加账户的账号..." /></td>
+        <td><input type="text" id="age"v-model="postdata.password" placeholder="待添加账户的密码..."/></td>
+        <td>
+          <select v-model="postdata.usertype" name="usertype">
+            <option value="">选择一个类别</option>
+            <option value="student">学生用户</option>
+            <option value="teacher">教师用户</option>
+          </select>
+        </td>
+        <td><input type="button" @click="insert" value="添加" /></td>
+      </tr>
+    </tbody>
+   </table>
+</div>
+
+<script type="text/javascript">
+var vm = new Vue({
+  el:'#usermanage',
+  data:{
+    user: {
+      username: '', password: '', usertype: ''
+    },
+    userlist: [
+      {username: 'user1', password: 'u1', usertype: 'student'},
+      {username: 'user2', password: 'u2', usertype: 'teacher'},
+    ],
+    postdata: {
+      username: '',
+      password: '',
+      usertype: '',
+      batch_names: ''
+    },
+  },
+  methods:{
+    insert:function(){
+      console.log(this.postdata);
+      if (this.postdata.username == '' || this.postdata.password == '' || this.postdata.usertype == '')
+      {
+        alert('用户信息不能有缺省');
+        return;
+      }
+      this.$http.post(backend_server + 'user-add/', this.postdata, {emulateJSON: true, credentials: true}).then(function(res){
+        console.log(res.bodyText);
+        var dataret = JSON.parse(res.bodyText);
+        if (dataret.code == 200)
+        {
+          alert('添加用户成功');
+          location.reload();
+        }
+        else
+        {
+          alert('添加用户失败(' + dataret.info +')');
+        }
+      },function(res){
+        console.log(res.status);
+        alert('添加用户失败(unknown error)');
+      });
+    },
+    remove:function(username){
+      console.log(username + ' is to be deleted.');
+      this.$http.post(backend_server + 'user-delete/', {"username": username}, {emulateJSON: true, credentials: true}).then(function(res){
+        console.log(res.bodyText);
+        var dataret = JSON.parse(res.bodyText);
+        if (dataret.code == 200)
+        {
+          alert('删除用户成功');
+          location.reload();
+        }
+        else
+        {
+          alert('删除用户失败(' + dataret.info +')');
+        }
+      },function(res){
+        console.log(res.status);
+        alert('删除用户失败(未知错误)');
+      });
+    },
+    get_userlist:function(){
+      this.$http.get(backend_server + 'user-list/', {credentials: true}).then(function(res){
+        console.log(res.bodyText);
+        var dataret = JSON.parse(res.bodyText);
+        if (dataret.code == 200)
+        {
+          this.userlist = dataret.userlist
+        }
+        else
+        {
+          alert('获取用户列表失败(' + dataret.info +')');
+        }
+      },function(res){
+        console.log(res.status);
+        alert('获取用户列表失败(未知错误)');
+      });
+    },
+    batch_insert:function(){
+      this.$http.post(backend_server + 'user-add-batch/', this.postdata, {emulateJSON: true, credentials: true}).then(function(res){
+        console.log(res.bodyText);
+        var dataret = JSON.parse(res.bodyText);
+        if (dataret.code == 200)
+        {
+          alert('成功添加了' + dataret.info + '个用户');
+          location.reload();
+        }
+        else
+        {
+          alert('添加用户失败(' + dataret.info +')');
+        }
+      },function(res){
+        console.log(res.status);
+        alert('添加用户失败(unknown error)');
+      });
+    },
+  },
+  created:function(){
+    this.get_userlist();
+  }
+})
+</script>
+
+</body>
+</html>
