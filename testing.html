@@ -111,24 +111,22 @@ var vm = new Vue({
                         tab.appendChild(tr);
                         tr.appendChild(qid);
                         tr.appendChild(qdesc);
-                                                
+                        paper_div.appendChild(tab);
+
                         var i=0;
+                        var prompt = 'A.';
                         for (var key in question)
                         {
                                 i++;
                                 if(i>4)
                                 {
-                                        var tr=document.createElement("tr");
-                                        var spare=document.createElement("td");
-                                        var option=document.createElement("td");
-                                        option.innerHTML=question[key];
-                                        tab.appendChild(tr);
-                                        tr.appendChild(spare);
-                                        tr.appendChild(option);
+                                        var option=document.createElement("button");
+                                        option.innerHTML=prompt + question[key];
+                                        paper_div.appendChild(option);
+                                        prompt = String.fromCharCode(prompt.charCodeAt(0) + 1);
+                                        prompt += '.';
                                 }
                         }
-                        paper_div.appendChild(tab);
-
                 };
         });
         }
