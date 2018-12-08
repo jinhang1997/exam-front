@@ -23,17 +23,17 @@
       <th colspan="4">题目内容/您的答案</th>
     </thead>
     <tbody>
-    <template v-for="(pro, index) in paper.question_list">
+    <template v-for="(pro, index) in test.test_problem">
       <tr>
         <td>{{ index + 1 }}</td>
         <td colspan="4">{{ pro.problem }}</td>
       </tr>
       <tr v-if="pro.type == 'keguan'">
         <td>({{ pro.point }} 分)</td>
-        <td><input type="radio" v-bind:name="pro.id" v-bind:value="pro.right" v-model="pro.answer">{{ pro.right }}</td>
-        <td><input type="radio" v-bind:name="pro.id" v-bind:value="pro.wrong1" v-model="pro.answer">{{ pro.wrong1 }}</td>
-        <td><input type="radio" v-bind:name="pro.id" v-bind:value="pro.wrong2" v-model="pro.answer">{{ pro.wrong2 }}</td>
-        <td><input type="radio" v-bind:name="pro.id" v-bind:value="pro.wrong3" v-model="pro.answer">{{ pro.wrong3 }}</td>
+        <td><input type="radio" v-bind:name="pro.id" v-bind:value="pro.option1" v-model="pro.answer">{{ pro.option1 }}</td>
+        <td><input type="radio" v-bind:name="pro.id" v-bind:value="pro.option2" v-model="pro.answer">{{ pro.option2 }}</td>
+        <td><input type="radio" v-bind:name="pro.id" v-bind:value="pro.option3" v-model="pro.answer">{{ pro.option3 }}</td>
+        <td><input type="radio" v-bind:name="pro.id" v-bind:value="pro.option4" v-model="pro.answer">{{ pro.option4 }}</td>
       </tr>
       <tr v-if="pro.type == 'zhuguan'">
         <td>({{ pro.point }} 分)</td>
@@ -42,9 +42,8 @@
     </template>
     </tbody>
   </table>
+  <input type="button" v-on:click="submit_answer()" value="提交答案" />
 </div>
-
-<input type="button" value="提交答案">
 
 <script src="files/testing.js"></script>
 

@@ -3,85 +3,55 @@ var vm = new Vue({
   el:'#show_paper',
   data:{
     paperid: '',
-    paper:{
-      problem_count:1,
-      question_list:[
-        {
-          id: 1,
-          problem: 'problem1',
-          type: 'zhuguan',
-          point: 10,
-          right: '',
-          wrong1: '',
-          wrong2: '',
-          wrong3: '',
-          answer: ''
-        },
-        {
-          id: 2,
-          problem: 'problem2',
-          type: 'keguan',
-          point: 4,
-          right: 'right2',
-          wrong1: 'wrong2_1',
-          wrong2: 'wrong2_2',
-          wrong3: 'wrong2_3',
-          answer: ''
-        },
-        {
-          id: 3,
-          problem: 'problem3',
-          type: 'zhuguan',
-          point: 8,
-          right: '',
-          wrong1: '',
-          wrong2: '',
-          wrong3: '',
-          answer: ''
-        },
-        {
-          id: 4,
-          problem: 'problem4',
-          type: 'keguan',
-          point: 4,
-          right: 'right4',
-          wrong1: 'wrong4_1',
-          wrong2: 'wrong4_2',
-          wrong3: 'wrong4_3',
-          answer: ''
-        }
-      ],
-    }
+    test: ''
+    /*test:{
+      test_problem: [
+        { id: '1',problem: '1+1=?',type: 'keguan',point: '5',option1: '5',option2: '2',option3: '4',option4: '3',answer: '',},
+        { id: '2',problem: '你好吗？',type: 'zhuguan',point: '10',option1: '',option2: '',option3: '',option4: '',answer: '',}
+      ]
+    }*/
   },
   methods:{
-    get_test:function(){
-      this.$http.get(backend_server + 'paper-get-detail/?id=' + this.paperid, {credentials: true})
+    submit_answer:function(){
+      this.$http.post(backend_server + 'test-manage/', this.test, {credentials: true})
       .then(function(res){
         console.log(res.bodyText);
         var dataret = JSON.parse(res.bodyText);
         if (dataret.code == 200)
         {
-          this.paper = dataret.info;
-          /*this.procount = dataret.paper.problem_count;
-          this.prolist = dataret.paper.question_list;*/
-          this.prolist = dataret.paper;
-          this.stulist = dataret.stulist;
-          //console.log(this.prolist);
-          this.generate_stutable();
+          alert('提交答案成功：用户' + dataret.stu);
         }
         else
         {
-          this.prolist = '获取试题列表失败(1)';
+          alert('提交答案失败(1)');
         }
       },function(res){
         console.log(res.status);
-        this.prolist = '获取试题列表失败(2)';
+        alert('提交答案失败(2)');
+      });
+    },
+    get_test:function(){
+      this.$http.get(backend_server + 'test-manage/?id=' + this.paperid, {credentials: true})
+      .then(function(res){
+        console.log(res.bodyText);
+        var dataret = JSON.parse(res.bodyText);
+        if (dataret.code == 200)
+        {
+          this.test = dataret.test;
+        }
+        else
+        {
+          alert('获取题目失败(1)');
+        }
+      },function(res){
+        console.log(res.status);
+        alert('获取题目失败(2)');
       });
     }
   },
   mounted(){
     this.paperid = getQueryString('paperid');
-    //this.get_test();
+    this.get_test();
   },
 })
 
