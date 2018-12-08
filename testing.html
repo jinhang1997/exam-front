@@ -1,141 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>在线考试系统 - 管理员</title>
-    <script src="files/jquery-3.3.1.min.js"></script>
-    <script src="files/vue.min.js"></script>
-    <script src="files/vue-resource.min.js"></script>
-    <script src="files/common.js"></script>
-    <link rel="stylesheet" type="text/css" href="files/style.css"/>
+  <meta charset="utf-8">
+  <title>在线考试系统 - 考试进行中</title>
+  <script src="files/jquery-3.3.1.min.js"></script>
+  <script src="files/vue.min.js"></script>
+  <script src="files/vue-resource.min.js"></script>
+  <script src="files/common.js"></script>
+  <link rel="stylesheet" type="text/css" href="files/style.css" />
 </head>
 <body>
-
 <div id="verify">
-    <h1>在线考试系统</h1>
-    <p>当前用户：{{ loginuser }}<br><a @click="logout()" href="#">注销登录</a></p>
+  <h1>在线考试系统</h1>
+  <p>当前用户：{{ loginuser }}<br><a @click="logout()" href="#">注销登录</a></p>
 </div>
 
 <div id="show_paper">
-        <h2>考试内容：</h2>
-        <table id="paper_table" border="1">
-           
-        </table>
+  <h2>试题内容</h2>
+  <table>
+    <thead>
+      <th>题号/分值</th>
+      <th colspan="4">题目内容/您的答案</th>
+    </thead>
+    <tbody>
+    <template v-for="(pro, index) in test.test_problem">
+      <tr>
+        <td>{{ index + 1 }}</td>
+        <td colspan="4">{{ pro.problem }}</td>
+      </tr>
+      <tr v-if="pro.type == 'keguan'">
+        <td>({{ pro.point }} 分)</td>
+        <td><input type="radio" v-bind:name="pro.id" v-bind:value="pro.option1" v-model="pro.answer">{{ pro.option1 }}</td>
+        <td><input type="radio" v-bind:name="pro.id" v-bind:value="pro.option2" v-model="pro.answer">{{ pro.option2 }}</td>
+        <td><input type="radio" v-bind:name="pro.id" v-bind:value="pro.option3" v-model="pro.answer">{{ pro.option3 }}</td>
+        <td><input type="radio" v-bind:name="pro.id" v-bind:value="pro.option4" v-model="pro.answer">{{ pro.option4 }}</td>
+      </tr>
+      <tr v-if="pro.type == 'zhuguan'">
+        <td>({{ pro.point }} 分)</td>
+        <td colspan="4"><textarea v-model="pro.answer"></textarea></td>
+      </tr>
+    </template>
+    </tbody>
+  </table>
+  <input type="button" v-on:click="submit_answer()" value="提交答案" />
 </div>
 
-<script type="text/javascript">
-var vm = new Vue({
-  el:'#show_paper',
-  data:{
-    paper: {
-        problem_count:1,
-        question_list:[
-                {
-                        id: 1,
-                        problem: 'problem1',
-                        type: 'zhuguan',
-                        point: 10,
-                        right: '',
-                        wrong1: '',
-                        wrong2: '',
-                        wrong3: ''
-                },
-                {
-                        id: 2,
-                        problem: 'problem2',
-                        type: 'keguan',
-                        point: 4,
-                        right: 'right2',
-                        wrong1: 'wrong2_1',
-                        wrong2: 'wrong2_2',
-                        wrong3: 'wrong2_3'
-                },
-                {
-                        id: 3,
-                        problem: 'problem3',
-                        type: 'zhuguan',
-                        point: 8,
-                        right: '',
-                        wrong1: '',
-                        wrong2: '',
-                        wrong3: ''
-                },
-                {
-                        id: 4,
-                        problem: 'problem4',
-                        type: 'keguan',
-                        point: 4,
-                        right: 'right4',
-                        wrong1: 'wrong4_1',
-                        wrong2: 'wrong4_2',
-                        wrong3: 'wrong4_3'
-                }
-        ]
-    }
-  },
-  mounted(){
-        this.ShowPaper()
-  },
-  methods:{
-        ShowPaper:function(){
-        questions = this.paper.question_list;
-        questions.forEach(question => {
-                var paper_div =document.getElementById("show_paper");
-                if(question.type=='zhuguan')
-                {
-                        var tr=document.createElement("tr");
-                        var qid=document.createElement("td");
-                        var qdesc=document.createElement("td");
-                        qid.innerHTML=question.id;
-                        qdesc.innerHTML=question.problem;
-                        var tab=document.createElement("table");
-                        tab.appendChild(tr);
-                        tr.appendChild(qid);
-                        tr.appendChild(qdesc);
-
-                        var input=document.createElement("textarea");
-                        input.setAttribute("type", "textarea");
-                        input.style.width = "200px";
-                        input.style.height = "100px";
-                        paper_div.appendChild(tab);
-                        paper_div.appendChild(input);
-                }
-                else if(question.type=='keguan')
-                {
-                        var tr=document.createElement("tr");
-                        var qid=document.createElement("td");
-                        var qdesc=document.createElement("td");
-                        qid.innerHTML=question.id;
-                        qdesc.innerHTML=question.problem;
-                        var tab=document.createElement("table");
-                        tab.appendChild(tr);
-                        tr.appendChild(qid);
-                        tr.appendChild(qdesc);
-                        paper_div.appendChild(tab);
-
-                        var i=0;
-                        var prompt = 'A.';
-                        for (var key in question)
-                        {
-                                i++;
-                                if(i>4)
-                                {
-                                        var option=document.createElement("button");
-                                        option.innerHTML=prompt + question[key];
-                                        paper_div.appendChild(option);
-                                        prompt = String.fromCharCode(prompt.charCodeAt(0) + 1);
-                                        prompt += '.';
-                                }
-                        }
-                };
-        });
-        }
-  }
-})
-
-
-
-</script>
+<script src="files/testing.js"></script>
 
 </body>
 </html>
