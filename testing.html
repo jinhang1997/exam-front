@@ -16,6 +16,29 @@
 </div>
 
 <div id="show_paper">
+  <h2>试卷信息</h2>
+  <!-- <p>{{ paper }}</p> -->
+  <table>
+    <thead>
+      <th>项目</th>
+      <th>数据</th>
+    </thead>
+    <tbody>
+      <tr>
+        <td>试卷编号</td><td>{{ paper.pid }}</td>
+      </tr>
+      <tr>
+        <td>试卷名称</td><td>{{ paper.pname }}</td>
+      </tr>
+      <tr>
+        <td>出题老师</td><td>{{ paper.teaname }}</td>
+      </tr>
+      <tr>
+        <td>是否开放</td>
+        <td v-if="paper.penabled == 'no'">否</td><td v-if="paper.penabled == 'yes'">是</td>
+      </tr>
+    </tbody>
+  </table>
   <h2>试题内容</h2>
   <table>
     <thead>
