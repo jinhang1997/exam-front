@@ -2,6 +2,7 @@
 var vm = new Vue({
   el:'#show_paper',
   data:{
+    paperid: '',
     paper:{
       problem_count:1,
       question_list:[
@@ -52,63 +53,35 @@ var vm = new Vue({
       ],
     }
   },
-  mounted(){
-    //this.ShowPaper()
-  },
   methods:{
-    ShowPaper:function(){
-      questions = this.paper.question_list;
-      questions.forEach(question => {
-        var paper_div =document.getElementById("show_paper");
-        if(question.type=='zhuguan')
+    get_test:function(){
+      this.$http.get(backend_server + 'paper-get-detail/?id=' + this.paperid, {credentials: true})
+      .then(function(res){
+        console.log(res.bodyText);
+        var dataret = JSON.parse(res.bodyText);
+        if (dataret.code == 200)
         {
-          var tr=document.createElement("tr");
-          var qid=document.createElement("td");
-          var qdesc=document.createElement("td");
-          qid.innerHTML=question.id;
-          qdesc.innerHTML=question.problem;
-          var tab=document.createElement("table");
-          tab.appendChild(tr);
-          tr.appendChild(qid);
-          tr.appendChild(qdesc);
-
-          var input=document.createElement("textarea");
-          input.setAttribute("type", "textarea");
-          input.style.width = "200px";
-          input.style.height = "100px";
-          paper_div.appendChild(tab);
-          paper_div.appendChild(input);
+          this.paper = dataret.info;
+          /*this.procount = dataret.paper.problem_count;
+          this.prolist = dataret.paper.question_list;*/
+          this.prolist = dataret.paper;
+          this.stulist = dataret.stulist;
+          //console.log(this.prolist);
+          this.generate_stutable();
         }
-        else if(question.type=='keguan')
+        else
         {
-          var tr=document.createElement("tr");
-          var qid=document.createElement("td");
-          var qdesc=document.createElement("td");
-          qid.innerHTML=question.id;
-          qdesc.innerHTML=question.problem;
-          var tab=document.createElement("table");
-          tab.appendChild(tr);
-          tr.appendChild(qid);
-          tr.appendChild(qdesc);
-          paper_div.appendChild(tab);
-
-          var i=0;
-          var prompt = 'A.';
-          for (var key in question)
-          {
-            i++;
-            if(i>4)
-            {
-              var option=document.createElement("button");
-              option.innerHTML=prompt + question[key];
-              paper_div.appendChild(option);
-              prompt = String.fromCharCode(prompt.charCodeAt(0) + 1);
-              prompt += '.';
-             }
-          }
-        };
+          this.prolist = '获取试题列表失败(1)';
+        }
+      },function(res){
+        console.log(res.status);
+        this.prolist = '获取试题列表失败(2)';
       });
     }
-  }
+  },
+  mounted(){
+    this.paperid = getQueryString('paperid');
+    //this.get_test();
+  },
 })
 

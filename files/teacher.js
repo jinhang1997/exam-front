@@ -6,13 +6,39 @@ var vm = new Vue({
     newpaper: ''
   },
   methods:{
-    create: function(){
+    control:function(action, paperid){
+      postdata = {
+        paperid: paperid,
+        action: action
+      };
+      console.log(postdata);
+      this.$http.post(backend_server + 'paper-manage/', postdata, {credentials: true})
+      .then(function(res){
+        console.log(res.bodyText);
+        var dataret = JSON.parse(res.bodyText);
+        if (dataret.code == 200)
+        {
+          alert('开启/关闭试题成功，试卷编号：' + dataret.paperid );
+          location.reload();
+        }
+        else
+        {
+          alert('开启/关闭试题失败（1）');
+          //location.reload();
+        }
+      },function(res){
+        console.log(res.status);
+        alert('开启/关闭试题失败（2）');
+        //location.reload();
+      });
+    },
+    create:function(){
       if (this.newpaper == '')
       {
         alert('试题名不能为空！');
         return;
       }
-      // TODO: send the name of new paper
+      // send the name of new paper
       postdata = {
         papername: this.newpaper,
         action: 'create'
@@ -38,7 +64,7 @@ var vm = new Vue({
       });
     },
     remove:function(paperid){
-      // TODO: remove paper from paper list
+      // remove paper from paper list
       postdata = {
         paperid: paperid,
         action: 'delete'
