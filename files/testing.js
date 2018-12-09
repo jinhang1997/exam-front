@@ -4,10 +4,7 @@ var vm = new Vue({
   data:{
     paper: '',
     test:{
-      test_problem: [
-        { id: '1',problem: '1+1=?',type: 'keguan',point: '5',option1: '5',option2: '2',option3: '4',option4: '3',answer: '',},
-        { id: '2',problem: '你好吗？',type: 'zhuguan',point: '10',option1: '',option2: '',option3: '',option4: '',answer: '',}
-      ]
+      test_problem: []
     }
   },
   methods:{
@@ -27,7 +24,7 @@ var vm = new Vue({
         }
         else
         {
-          alert('提交答案失败(1)');
+          alert('提交答案失败(' + dataret.info + ')');
         }
       },function(res){
         console.log(res.status);
