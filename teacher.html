@@ -44,8 +44,12 @@
         <td>{{ paper.teaname }}</td>
         <td>{{ paper.prolist }}</td>
         <td>{{ paper.stulist }}</td>
-        <td><input type="button" v-on:click="remove(paper.pid)" value="删除" />
-          <input type="button" v-on:click="detail(paper.pid)" value="查看" /></td>
+        <td>
+          <input type="button" v-if="paper.penabled == 'no'" v-on:click="control('enable', paper.pid)" value="开放" />
+          <input type="button" v-if="paper.penabled == 'yes'" v-on:click="control('disable', paper.pid)" value="关闭" />
+          <input type="button" v-on:click="remove(paper.pid)" value="删除" />
+          <input type="button" v-on:click="detail(paper.pid)" value="查看" />
+        </td>
       </tr>
     </tbody>
    </table>

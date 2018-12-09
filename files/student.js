@@ -7,6 +7,9 @@ var vm = new Vue({
     testhistory: ''
   },
   methods:{
+    enter_test:function(paperid){
+      window.open("testing.html?paperid=" + paperid);
+    },
     get_my_info:function(){
       this.$http.get('http://localhost:8000/my-info/').then(function(res){
         console.log(res.bodyText);
@@ -25,7 +28,8 @@ var vm = new Vue({
       });
     },
     get_test_list:function(){
-      this.$http.get('http://localhost:8000/paper-get-list-stu/', {credentials: true}).then(function(res){
+      this.$http.get('http://localhost:8000/paper-get-list-stu/', {credentials: true})
+      .then(function(res){
         console.log(res.bodyText);
         var dataret = JSON.parse(res.bodyText);
         if (dataret.code == 200)
@@ -42,7 +46,8 @@ var vm = new Vue({
       });
     },
     get_test_history:function(){
-      this.$http.get('http://localhost:8000/test-history/', {credentials: true}).then(function(res){
+      this.$http.get('http://localhost:8000/test-history/', {credentials: true})
+      .then(function(res){
         console.log(res.bodyText);
         var dataret = JSON.parse(res.bodyText);
         if (dataret.code == 200)
