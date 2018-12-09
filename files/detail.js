@@ -34,6 +34,9 @@ var vm = new Vue({
     paperid: 0
   },
   methods:{
+    judge:function(paperid){
+      window.open("judge.html?paperid=" + paperid);
+    },
     remove_name:function(stuname){
       postdata = {
         paperid: this.paper.pid,

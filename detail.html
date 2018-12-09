@@ -45,14 +45,21 @@
       </tr>
       <tr>
         <td>题目数量</td>
-        <td>{{ prolist.problem_count }}</td>
+        <td>{{ paper.prolist }}</td>
       </tr>
       <tr>
         <td>考生人数</td>
-        <td>{{ stulist.count }}</td>
+        <td>{{ paper.stulist }}</td>
+      </tr>
+      <tr>
+        <td>交卷人数</td>
+        <td>{{ paper.submitted }}</td>
       </tr>
     </tbody>
   </table>
+  <hr>
+  <h2>判题系统</h2>
+  <p><input type="button" @click="judge(paper.pid)" value="进入本试卷判题系统"></p>
   <hr>
   <h2>准考学生列表</h2>
   <h3>点击可删除单个学生</h3>

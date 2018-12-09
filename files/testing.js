@@ -21,6 +21,7 @@ var vm = new Vue({
         if (dataret.code == 200)
         {
           alert('提交答案成功：' + dataret.stu + '的试卷' + dataret.pname);
+          window.location="student.html";  
         }
         else
         {

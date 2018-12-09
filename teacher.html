@@ -32,6 +32,7 @@
         <th>出题老师</th>
         <th>题目数量</th>
         <th>准考人数</th>
+        <th>交卷人数</th>
         <th>试卷操作</th>
       </tr>
     </thead>
@@ -44,6 +45,7 @@
         <td>{{ paper.teaname }}</td>
         <td>{{ paper.prolist }}</td>
         <td>{{ paper.stulist }}</td>
+        <td>{{ paper.submitted }}</td>
         <td>
           <input type="button" v-if="paper.penabled == 'no'" v-on:click="control('enable', paper.pid)" value="开放" />
           <input type="button" v-if="paper.penabled == 'yes'" v-on:click="control('disable', paper.pid)" value="关闭" />

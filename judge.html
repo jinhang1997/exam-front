@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>在线考试系统 - 判题系统</title>
+  <script src="files/jquery-3.3.1.min.js"></script>
+  <script src="files/vue.min.js"></script>
+  <script src="files/vue-resource.min.js"></script>
+  <script src="files/common.js"></script>
+  <link rel="stylesheet" type="text/css" href="files/style.css" />
+</head>
+<body>
+
+<div id="verify">
+  <h1>在线考试系统</h1>
+  <p>当前用户：{{ loginuser }}<br><a @click="logout()" href="#">注销登录</a></p>
+</div>
+
+<div id="app">
+  <h2>试卷信息</h2>
+  <table>
+    <thead>
+      <th>项目</th>
+      <th>数据</th>
+    </thead>
+    <tbody>
+      <tr>
+        <td>试卷编号</td>
+        <td>{{ paper.pid }}</td>
+      </tr>
+      <tr>
+        <td>试卷名称</td>
+        <td>{{ paper.pname }}</td>
+      </tr>
+      <tr>
+        <td>出题老师</td>
+        <td>{{ paper.teaname }}</td>
+      </tr>
+      <tr>
+        <td>是否开放</td>
+        <td v-if="paper.penabled == 'no'">否</td>
+        <td v-if="paper.penabled == 'yes'">是</td>
+      </tr>
+      <tr>
+        <td>题目数量</td>
+        <td>{{ paper.prolist }}</td>
+      </tr>
+      <tr>
+        <td>考生人数</td>
+        <td>{{ paper.stulist }}</td>
+      </tr>
+      <tr>
+        <td>交卷人数</td>
+        <td>{{ paper.submitted }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <hr>
+
+  <h2>提交答案列表</h2>
+  {{ answer_content }}
+  <table>
+    <thead>
+      <th>试卷编号</th>
+      <th>学生姓名</th>
+      <th>提交时间</th>
+      <th>客观题得分</th>
+      <th>主观题得分</th>
+      <th>答案内容</th>
+      <th>记录操作</th>
+    </thead>
+    <tbody>
+      <tr v-for="(ans, index) in anslist">
+        <td>{{ ans.paperid }}</td>
+        <td>{{ ans.stuid }}</td>
+        <td>{{ ans.submit_time }}</td>
+        <td>{{ ans.keguan_grade }}</td>
+        <td>{{ ans.zhuguan_grade }}</td>
+        <td>{{ ans.answers }}</td>
+        <!-- <td><input type="button" @click="showans(ans.stuid)" value="点击查看"></td> -->
+        <td><input type="button" value="删除"></td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<script src="files/judge.js"></script>
+
+</body>
+</html>
